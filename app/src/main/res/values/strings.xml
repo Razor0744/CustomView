@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">CustomView</string>
+
+    <string name="pieChartAmount">Всего</string>
+
+    <string-array name="pieChartColorArray">
+        <item>#E480F4</item>
+        <item>#6CC3F3</item>
+        <item>#7167ED</item>
+        <item>#D9455F</item>
+        <item>#6054EA</item>
+    </string-array>
+</resources>
