@@ -4,7 +4,7 @@ import android.os.Parcelable
 import android.view.View
 
 class PieChartState(
-    private val superSavedState: Parcelable?,
-    val dataList: List<Pair<Int, String>>
+    superSavedState: Parcelable?,
+    val dataList: List<Int>
 ) : View.BaseSavedState(superSavedState), Parcelable {
 }

@@ -3,8 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:background="@color/black"
     android:layout_height="match_parent"
+    android:background="@color/black"
     tools:context=".presentation.activity.MainActivity">
 
     <LinearLayout
@@ -22,13 +22,7 @@
             android:layout_height="wrap_content"
             app:pieChartCircleSectionSpace="2"
             app:pieChartCircleStrokeWidth="6dp"
-            app:pieChartColors="@array/pieChartColorArray"
-            app:pieChartTextAmount="@string/pieChartAmount"
-            app:pieChartTextAmountColor="?android:attr/textColor"
-            app:pieChartTextDescriptionColor="?android:attr/textColorHint"
-            app:pieChartTextDescriptionSize="14sp"
-            app:pieChartTextNumberColor="?android:attr/textColor"
-            app:pieChartTextNumberSize="16sp" />
+            app:pieChartColors="@array/pieChartColorArray" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

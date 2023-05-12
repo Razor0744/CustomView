@@ -76,7 +76,7 @@ class PieChart @JvmOverloads constructor(
     private var totalAmount: Int = 0
     private var pieChartColors: List<String> = listOf()
     private var percentageCircleList: List<PieChartModel> = listOf()
-    private var dataList: List<Pair<Int, String>> = listOf()
+    private var dataList: List<Int> = listOf()
     private var animationSweepAngle: Int = 0
 
     /**
@@ -169,7 +169,7 @@ class PieChart @JvmOverloads constructor(
      * Имплиментируемый метод интерфейса взаимодействия PieChartInterface.
      * Добавление данных в View.
      */
-    override fun setDataChart(list: List<Pair<Int, String>>) {
+    override fun setDataChart(list: List<Int>) {
         dataList = list
         calculatePercentageOfData()
     }
@@ -262,11 +262,11 @@ class PieChart @JvmOverloads constructor(
      * Метод заполнения поля [percentageCircleList]
      */
     private fun calculatePercentageOfData() {
-        totalAmount = dataList.fold(0) { res, value -> res + value.first }
+        totalAmount = dataList.fold(0) { res, value -> res + value }
 
         var startAt = circleSectionSpace
         percentageCircleList = dataList.mapIndexed { index, pair ->
-            var percent = pair.first * 100 / totalAmount.toFloat() - circleSectionSpace
+            var percent = pair * 100 / totalAmount.toFloat() - circleSectionSpace
             percent = if (percent < 0F) 0F else percent
 
             val resultModel = PieChartModel(

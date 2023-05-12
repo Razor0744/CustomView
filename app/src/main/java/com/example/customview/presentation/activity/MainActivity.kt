@@ -11,7 +11,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
     }
 
     override fun onStart() {
@@ -22,11 +21,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun pieChart() {
         binding.pieChart.setDataChart(
-            listOf(
-                Pair(4, "вроде должно работать"),
-                Pair(5, "ahahahahha"),
-                Pair(10, "notBad")
-            )
+            listOf(4, 5, 10)
         )
         binding.pieChart.startAnimation()
     }
