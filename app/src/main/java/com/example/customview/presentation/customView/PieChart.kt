@@ -4,7 +4,6 @@ import android.animation.ValueAnimator
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
-import android.graphics.Rect
 import android.graphics.RectF
 import android.graphics.Typeface
 import android.os.Parcelable
@@ -61,16 +60,10 @@ class PieChart @JvmOverloads constructor(
      * Базовые значения для полей и самой PieChart
      */
     companion object {
-        private const val DEFAULT_MARGIN_TEXT_1 = 2
-        private const val DEFAULT_MARGIN_TEXT_2 = 10
-        private const val DEFAULT_MARGIN_TEXT_3 = 2
         private const val DEFAULT_MARGIN_SMALL_CIRCLE = 12
 
-        /** Процент ширины для отображения текста от общей ширины View */
-        private const val TEXT_WIDTH_PERCENT = 0.40
-
         /** Процент ширины для отображения круговой диаграммы от общей ширины View */
-        private const val CIRCLE_WIDTH_PERCENT = 0.50
+        private const val CIRCLE_WIDTH_PERCENT = 1
 
         /** Базовые значения ширины и высоты View */
         const val DEFAULT_VIEW_SIZE_HEIGHT = 150
@@ -101,13 +94,6 @@ class PieChart @JvmOverloads constructor(
      * (<declare-styleable name="PieChart">).
      */
     init {
-        // Задаем базовые значения и конвертируем в px
-        var textAmountSize: Float = context.spToPx(22)
-        var textNumberSize: Float = context.spToPx(20)
-        var textDescriptionSize: Float = context.spToPx(14)
-        var textAmountColor: Int = Color.WHITE
-        var textNumberColor: Int = Color.WHITE
-        var textDescriptionColor: Int = Color.GRAY
 
         // Инициализируем поля View, если Attr присутствуют
         if (attrs != null) {
@@ -139,33 +125,10 @@ class PieChart @JvmOverloads constructor(
                 circleSectionSpace
             )
 
-            // Секция текста
-            textAmountSize =
-                typeArray.getDimension(R.styleable.PieChart_pieChartTextAmountSize, textAmountSize)
-            textNumberSize =
-                typeArray.getDimension(R.styleable.PieChart_pieChartTextNumberSize, textNumberSize)
-            textDescriptionSize = typeArray.getDimension(
-                R.styleable.PieChart_pieChartTextDescriptionSize,
-                textDescriptionSize
-            )
-            textAmountColor =
-                typeArray.getColor(R.styleable.PieChart_pieChartTextAmountColor, textAmountColor)
-            textNumberColor =
-                typeArray.getColor(R.styleable.PieChart_pieChartTextNumberColor, textNumberColor)
-            textDescriptionColor = typeArray.getColor(
-                R.styleable.PieChart_pieChartTextDescriptionColor,
-                textDescriptionColor
-            )
-
             typeArray.recycle()
         }
 
         circlePadding += circleStrokeWidth
-
-        // Инициализация кистей View
-        initPains(amountTextPaint, textAmountSize, textAmountColor)
-        initPains(numberTextPaint, textNumberSize, textNumberColor)
-        initPains(descriptionTextPain, textDescriptionSize, textDescriptionColor, true)
     }
 
     /**
@@ -260,22 +223,6 @@ class PieChart @JvmOverloads constructor(
                 )
             }
         }
-    }
-
-    /**
-     * Метод инициализации переданной TextPaint
-     */
-    private fun initPains(
-        textPaint: TextPaint,
-        textSize: Float,
-        textColor: Int,
-        isDescription: Boolean = false
-    ) {
-        textPaint.color = textColor
-        textPaint.textSize = textSize
-        textPaint.isAntiAlias = true
-
-        if (!isDescription) textPaint.typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
     }
 
     /**
