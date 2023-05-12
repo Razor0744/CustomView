@@ -1,4 +1,4 @@
-package com.example.customview.domain
+package com.example.customview.domain.model
 
 import android.graphics.Color
 import android.graphics.CornerPathEffect
@@ -11,13 +11,13 @@ import android.graphics.Paint
  * в котором переданные в модель значения ампроксимурются к значениям процента круговой диаграммы.
  *
  * Модель состоит и следующих параметров:
- * @property percentOfCircle - значение занимаемого процента круговой диаграммы.
- * @property percentToStartAt - значение положения на круговой диаграмме,
+ * @property percentOfCircle  значение занимаемого процента круговой диаграммы.
+ * @property percentToStartAt  значение положения на круговой диаграмме,
  * откуда должен начать отрисовываться объект.
- * @property colorOfLine - значение цвета для отрисовки линии объекта.
- * @property stroke - значение ширины линии объекта.
- * @property paint - объект кисти отрисовки
- * @property paintRound - закругление концов линии объекта.
+ * @property colorOfLine  значение цвета для отрисовки линии объекта.
+ * @property stroke  значение ширины линии объекта.
+ * @property paint  объект кисти отрисовки
+ * @property paintRound  закругление концов линии объекта.
  */
 data class PieChartModel(
     var percentOfCircle: Float = 0F,

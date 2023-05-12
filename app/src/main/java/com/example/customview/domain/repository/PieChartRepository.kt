@@ -4,7 +4,7 @@ interface PieChartRepository {
 
     /**
      * Метод для добавления списка данных для отображения на графике.
-     * @property list - список данных, тип которого мы можете поменять
+     * @property list список данных, тип которого мы можете поменять
      * на свою определенную модель.
      */
     fun setDataChart(list: List<Pair<Int, String>>)

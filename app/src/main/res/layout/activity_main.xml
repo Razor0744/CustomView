@@ -17,7 +17,7 @@
 
         <com.example.customview.presentation.customView.PieChart
             android:id="@+id/pie_chart"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:pieChartCircleSectionSpace="2"
             app:pieChartCircleStrokeWidth="6dp"
@@ -28,7 +28,6 @@
             app:pieChartTextDescriptionSize="14sp"
             app:pieChartTextNumberColor="?android:attr/textColor"
             app:pieChartTextNumberSize="16sp" />
-
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
