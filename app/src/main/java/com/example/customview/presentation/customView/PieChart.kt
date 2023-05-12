@@ -8,10 +8,6 @@ import android.graphics.Rect
 import android.graphics.RectF
 import android.graphics.Typeface
 import android.os.Parcelable
-import android.text.Layout
-import android.text.StaticLayout
-import android.text.TextDirectionHeuristic
-import android.text.TextDirectionHeuristics
 import android.text.TextPaint
 import android.util.AttributeSet
 import android.view.View
@@ -36,11 +32,7 @@ import com.example.customview.domain.repository.PieChartRepository
  * AnalyticalPieChart обладает огромным количество настроек отображения.
  * Все расчеты производятся в пикселях, необходимо это учитывать при изменении кода.
  *
- * @property marginTextFirst   значение отступа между числом и его описанием.
- * @property marginTextSecond  значение отступа между объектами, где объект - число и описание.
- * @property marginTextThird   значение отступа между числом и его описанием общего результата.
  * @property marginSmallCircle значение отступа между числом и маленьким кругом.
- * @property marginText        значение суммы отступов [marginTextFirst] и [marginTextSecond].
  * @property circleRect        объект отрисовки круговой диаграммы.
  * @property circleStrokeWidth значение толщины круговой диаграммы.
  * @property circleRadius      значение радиуса круговой диаграммы.
@@ -52,19 +44,9 @@ import com.example.customview.domain.repository.PieChartRepository
  * @property numberTextPaint      объект кисти отрисовки текста чисел.
  * @property descriptionTextPain  объект кисти отрисовки текста описания.
  * @property amountTextPaint      объект кисти отрисовки текста результата.
- * @property textStartX           значение координаты X, откуда отрисовывается текст.
- * @property textStartY           значение координаты Y, откуда отрисовывается текст.
- * @property textHeight           значение высоты текста.
- * @property textCircleRadius     значение радиуса малого круга около текста числа.
- * @property textAmountStr        строка результата.
- * @property textAmountY          значение координаты Y, откуда отрисовывается результирующий текст.
- * @property textAmountXNumber    значение координаты X, откуда отрисовывается результирующий текст числа.
- * @property textAmountXDescription     значение координаты X, откуда отрисовывается описание результата.
- * @property textAmountYDescription     значение координаты Y, откуда отрисовывается описание результата.
  * @property totalAmount          итоговый результат - сумма значений Int в [dataList].
  * @property pieChartColors       список цветов круговой диаграммы в виде текстового представления.
  * @property percentageCircleList список моделей для отрисовки.
- * @property textRowList          список строк, которые необходимо отобразить.
  * @property dataList             исходный список данных.
  * @property animationSweepAngle  переменная для анимации.
  */
@@ -95,11 +77,7 @@ class PieChart @JvmOverloads constructor(
         const val DEFAULT_VIEW_SIZE_WIDTH = 250
     }
 
-    private var marginTextFirst: Float = context.dpToPx(DEFAULT_MARGIN_TEXT_1)
-    private var marginTextSecond: Float = context.dpToPx(DEFAULT_MARGIN_TEXT_2)
-    private var marginTextThird: Float = context.dpToPx(DEFAULT_MARGIN_TEXT_3)
     private var marginSmallCircle: Float = context.dpToPx(DEFAULT_MARGIN_SMALL_CIRCLE)
-    private val marginText: Float = marginTextFirst + marginTextSecond
     private val circleRect = RectF()
     private var circleStrokeWidth: Float = context.dpToPx(6)
     private var circleRadius: Float = 0F
@@ -111,15 +89,6 @@ class PieChart @JvmOverloads constructor(
     private var numberTextPaint: TextPaint = TextPaint()
     private var descriptionTextPain: TextPaint = TextPaint()
     private var amountTextPaint: TextPaint = TextPaint()
-    private var textStartX: Float = 0F
-    private var textStartY: Float = 0F
-    private var textHeight: Int = 0
-    private var textCircleRadius: Float = context.dpToPx(4)
-    private var textAmountStr: String = ""
-    private var textAmountY: Float = 0F
-    private var textAmountXNumber: Float = 0F
-    private var textAmountXDescription: Float = 0F
-    private var textAmountYDescription: Float = 0F
     private var totalAmount: Int = 0
     private var pieChartColors: List<String> = listOf()
     private var percentageCircleList: List<PieChartModel> = listOf()
@@ -149,18 +118,6 @@ class PieChart @JvmOverloads constructor(
             pieChartColors = typeArray.resources.getStringArray(colorResId).toList()
 
             // Секция отступов
-            marginTextFirst = typeArray.getDimension(
-                R.styleable.PieChart_pieChartMarginTextFirst,
-                marginTextFirst
-            )
-            marginTextSecond = typeArray.getDimension(
-                R.styleable.PieChart_pieChartMarginTextSecond,
-                marginTextSecond
-            )
-            marginTextThird = typeArray.getDimension(
-                R.styleable.PieChart_pieChartMarginTextThird,
-                marginTextThird
-            )
             marginSmallCircle = typeArray.getDimension(
                 R.styleable.PieChart_pieChartMarginSmallCircle,
                 marginSmallCircle
@@ -183,10 +140,6 @@ class PieChart @JvmOverloads constructor(
             )
 
             // Секция текста
-            textCircleRadius = typeArray.getDimension(
-                R.styleable.PieChart_pieChartTextCircleRadius,
-                textCircleRadius
-            )
             textAmountSize =
                 typeArray.getDimension(R.styleable.PieChart_pieChartTextAmountSize, textAmountSize)
             textNumberSize =
@@ -203,7 +156,6 @@ class PieChart @JvmOverloads constructor(
                 R.styleable.PieChart_pieChartTextDescriptionColor,
                 textDescriptionColor
             )
-            textAmountStr = typeArray.getString(R.styleable.PieChart_pieChartTextAmount) ?: ""
 
             typeArray.recycle()
         }
@@ -224,11 +176,7 @@ class PieChart @JvmOverloads constructor(
 
         val initSizeWidth = resolveDefaultSize(widthMeasureSpec, DEFAULT_VIEW_SIZE_WIDTH)
 
-        val textTextWidth = (initSizeWidth * TEXT_WIDTH_PERCENT)
-        val initSizeHeight = calculateViewHeight(heightMeasureSpec, textTextWidth.toInt())
-
-        textStartX = initSizeWidth - textTextWidth.toFloat()
-        textStartY = initSizeHeight.toFloat() / 2 - textHeight / 2
+        val initSizeHeight = calculateViewHeight(heightMeasureSpec)
 
         calculateCircleRadius(initSizeWidth, initSizeHeight)
 
@@ -243,7 +191,6 @@ class PieChart @JvmOverloads constructor(
         super.onDraw(canvas)
 
         drawCircle(canvas)
-        drawText(canvas)
     }
 
     /**
@@ -316,20 +263,6 @@ class PieChart @JvmOverloads constructor(
     }
 
     /**
-     * Метод отрисовки всего текста диаграммы на Canvas.
-     */
-    private fun drawText(canvas: Canvas) {
-
-        canvas.drawText(totalAmount.toString(), textAmountXNumber, textAmountY, amountTextPaint)
-        canvas.drawText(
-            textAmountStr,
-            textAmountXDescription,
-            textAmountYDescription,
-            descriptionTextPain
-        )
-    }
-
-    /**
      * Метод инициализации переданной TextPaint
      */
     private fun initPains(
@@ -358,11 +291,10 @@ class PieChart @JvmOverloads constructor(
     /**
      * Метод расчёта высоты всего текста, включая отступы.
      */
-    private fun calculateViewHeight(heightMeasureSpec: Int, textWidth: Int): Int {
+    private fun calculateViewHeight(heightMeasureSpec: Int): Int {
         val initSizeHeight = resolveDefaultSize(heightMeasureSpec, DEFAULT_VIEW_SIZE_HEIGHT)
-        textHeight = (dataList.size * marginText).toInt()
 
-        val textHeightWithPadding = textHeight + paddingTop + paddingBottom
+        val textHeightWithPadding = paddingTop + paddingBottom
         return if (textHeightWithPadding > initSizeHeight) textHeightWithPadding else initSizeHeight
     }
 
@@ -386,18 +318,6 @@ class PieChart @JvmOverloads constructor(
 
         circleCenterX = (circleRadius * 2 + circlePadding + circlePadding) / 2
         circleCenterY = (height / 2 + circleRadius + (height / 2 - circleRadius)) / 2
-
-        textAmountY = circleCenterY
-
-        val sizeTextAmountNumber = getWidthOfAmountText(
-            totalAmount.toString(),
-            amountTextPaint
-        )
-
-        textAmountXNumber = circleCenterX - sizeTextAmountNumber.width() / 2
-        textAmountXDescription =
-            circleCenterX - getWidthOfAmountText(textAmountStr, descriptionTextPain).width() / 2
-        textAmountYDescription = circleCenterY + sizeTextAmountNumber.height() + marginTextThird
     }
 
     /**
@@ -421,15 +341,6 @@ class PieChart @JvmOverloads constructor(
             startAt += percent + circleSectionSpace
             resultModel
         }
-    }
-
-    /**
-     * Метод обертки текста в класс [Rect]
-     */
-    private fun getWidthOfAmountText(text: String, textPaint: TextPaint): Rect {
-        val bounds = Rect()
-        textPaint.getTextBounds(text, 0, text.length, bounds)
-        return bounds
     }
 
 }
