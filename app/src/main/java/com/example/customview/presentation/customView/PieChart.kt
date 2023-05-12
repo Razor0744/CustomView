@@ -227,7 +227,7 @@ class PieChart @JvmOverloads constructor(
     }
 
     /**
-     * Метод расчёта высоты всего текста, включая отступы.
+     * Метод расчёта высоты всего View, включая отступы.
      */
     private fun calculateViewHeight(heightMeasureSpec: Int): Int {
         val initSizeHeight = resolveDefaultSize(heightMeasureSpec, DEFAULT_VIEW_SIZE_HEIGHT)
