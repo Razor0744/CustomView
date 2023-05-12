@@ -5,15 +5,12 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.RectF
-import android.graphics.Typeface
 import android.os.Parcelable
-import android.text.TextPaint
 import android.util.AttributeSet
 import android.view.View
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import com.example.customview.R
 import com.example.customview.domain.extensions.dpToPx
-import com.example.customview.domain.extensions.spToPx
 import com.example.customview.domain.model.PieChartModel
 import com.example.customview.domain.model.PieChartState
 import com.example.customview.domain.repository.PieChartRepository
@@ -40,9 +37,6 @@ import com.example.customview.domain.repository.PieChartRepository
  * @property circleSectionSpace   значение расстояние-процент между линиями круга.
  * @property circleCenterX        значение координаты X центра круговой диаграммы.
  * @property circleCenterY        значение координаты Y центра круговой диаграммы.
- * @property numberTextPaint      объект кисти отрисовки текста чисел.
- * @property descriptionTextPain  объект кисти отрисовки текста описания.
- * @property amountTextPaint      объект кисти отрисовки текста результата.
  * @property totalAmount          итоговый результат - сумма значений Int в [dataList].
  * @property pieChartColors       список цветов круговой диаграммы в виде текстового представления.
  * @property percentageCircleList список моделей для отрисовки.
@@ -79,9 +73,6 @@ class PieChart @JvmOverloads constructor(
     private var circleSectionSpace: Float = 3F
     private var circleCenterX: Float = 0F
     private var circleCenterY: Float = 0F
-    private var numberTextPaint: TextPaint = TextPaint()
-    private var descriptionTextPain: TextPaint = TextPaint()
-    private var amountTextPaint: TextPaint = TextPaint()
     private var totalAmount: Int = 0
     private var pieChartColors: List<String> = listOf()
     private var percentageCircleList: List<PieChartModel> = listOf()
