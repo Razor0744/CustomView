@@ -4,7 +4,6 @@ import android.animation.ValueAnimator
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
-import android.graphics.Paint
 import android.graphics.Rect
 import android.graphics.RectF
 import android.graphics.Typeface
@@ -18,10 +17,9 @@ import android.util.AttributeSet
 import android.view.View
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import com.example.customview.R
-import com.example.customview.domain.model.PieChartModel
 import com.example.customview.domain.extensions.dpToPx
-import com.example.customview.domain.extensions.draw
 import com.example.customview.domain.extensions.spToPx
+import com.example.customview.domain.model.PieChartModel
 import com.example.customview.domain.model.PieChartState
 import com.example.customview.domain.repository.PieChartRepository
 
@@ -85,7 +83,6 @@ class PieChart @JvmOverloads constructor(
         private const val DEFAULT_MARGIN_TEXT_2 = 10
         private const val DEFAULT_MARGIN_TEXT_3 = 2
         private const val DEFAULT_MARGIN_SMALL_CIRCLE = 12
-        private const val PIE_CHART_KEY = "PieChartArrayData"
 
         /** Процент ширины для отображения текста от общей ширины View */
         private const val TEXT_WIDTH_PERCENT = 0.40
@@ -126,7 +123,6 @@ class PieChart @JvmOverloads constructor(
     private var totalAmount: Int = 0
     private var pieChartColors: List<String> = listOf()
     private var percentageCircleList: List<PieChartModel> = listOf()
-    private var textRowList: MutableList<StaticLayout> = mutableListOf()
     private var dataList: List<Pair<Int, String>> = listOf()
     private var animationSweepAngle: Int = 0
 
@@ -226,8 +222,6 @@ class PieChart @JvmOverloads constructor(
      */
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
 
-        textRowList.clear()
-
         val initSizeWidth = resolveDefaultSize(widthMeasureSpec, DEFAULT_VIEW_SIZE_WIDTH)
 
         val textTextWidth = (initSizeWidth * TEXT_WIDTH_PERCENT)
@@ -325,28 +319,6 @@ class PieChart @JvmOverloads constructor(
      * Метод отрисовки всего текста диаграммы на Canvas.
      */
     private fun drawText(canvas: Canvas) {
-        var textBuffY = textStartY
-        textRowList.forEachIndexed { index, staticLayout ->
-            if (index % 2 == 0) {
-                staticLayout.draw(
-                    canvas,
-                    textStartX + marginSmallCircle + textCircleRadius,
-                    textBuffY
-                )
-                canvas.drawCircle(
-                    textStartX + marginSmallCircle / 2,
-                    textBuffY + staticLayout.height / 2 + textCircleRadius / 2,
-                    textCircleRadius,
-                    Paint().apply {
-                        color = Color.parseColor(pieChartColors[(index / 2) % pieChartColors.size])
-                    }
-                )
-                textBuffY += staticLayout.height + marginTextFirst
-            } else {
-                staticLayout.draw(canvas, textStartX, textBuffY)
-                textBuffY += staticLayout.height + marginTextSecond
-            }
-        }
 
         canvas.drawText(totalAmount.toString(), textAmountXNumber, textAmountY, amountTextPaint)
         canvas.drawText(
@@ -388,7 +360,7 @@ class PieChart @JvmOverloads constructor(
      */
     private fun calculateViewHeight(heightMeasureSpec: Int, textWidth: Int): Int {
         val initSizeHeight = resolveDefaultSize(heightMeasureSpec, DEFAULT_VIEW_SIZE_HEIGHT)
-        textHeight = (dataList.size * marginText + getTextViewHeight(textWidth)).toInt()
+        textHeight = (dataList.size * marginText).toInt()
 
         val textHeightWithPadding = textHeight + paddingTop + paddingBottom
         return if (textHeightWithPadding > initSizeHeight) textHeightWithPadding else initSizeHeight
@@ -429,33 +401,6 @@ class PieChart @JvmOverloads constructor(
     }
 
     /**
-     * Метод расчёта высоты объектов, где объект - это число и его описание.
-     * Добавление объекта в список строк для отрисовки [textRowList].
-     */
-    private fun getTextViewHeight(maxWidth: Int): Int {
-        var textHeight = 0
-        dataList.forEach {
-            val textLayoutNumber = getMultilineText(
-                text = it.first.toString(),
-                textPaint = numberTextPaint,
-                width = maxWidth
-            )
-            val textLayoutDescription = getMultilineText(
-                text = it.second,
-                textPaint = descriptionTextPain,
-                width = maxWidth
-            )
-            textRowList.apply {
-                add(textLayoutNumber)
-                add(textLayoutDescription)
-            }
-            textHeight += textLayoutNumber.height + textLayoutDescription.height
-        }
-
-        return textHeight
-    }
-
-    /**
      * Метод заполнения поля [percentageCircleList]
      */
     private fun calculatePercentageOfData() {
@@ -485,29 +430,6 @@ class PieChart @JvmOverloads constructor(
         val bounds = Rect()
         textPaint.getTextBounds(text, 0, text.length, bounds)
         return bounds
-    }
-
-    /**
-     * Метод создания [StaticLayout] с переданными значениями
-     */
-    private fun getMultilineText(
-        text: CharSequence,
-        textPaint: TextPaint,
-        width: Int,
-        start: Int = 0,
-        end: Int = text.length,
-        alignment: Layout.Alignment = Layout.Alignment.ALIGN_NORMAL,
-        textDir: TextDirectionHeuristic = TextDirectionHeuristics.LTR,
-        spacingMult: Float = 1f,
-        spacingAdd: Float = 0f
-    ): StaticLayout {
-
-        return StaticLayout.Builder
-            .obtain(text, start, end, textPaint, width)
-            .setAlignment(alignment)
-            .setTextDirection(textDir)
-            .setLineSpacing(spacingAdd, spacingMult)
-            .build()
     }
 
 }
