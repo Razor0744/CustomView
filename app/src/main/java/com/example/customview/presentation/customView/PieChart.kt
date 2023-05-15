@@ -55,7 +55,8 @@ class PieChart @JvmOverloads constructor(
     companion object {
 
         /** Процент ширины для отображения круговой диаграммы от общей ширины View */
-        private const val CIRCLE_WIDTH_PERCENT = 1
+        // 0.97 - 100%
+        private const val CIRCLE_WIDTH_PERCENT = 0.97
 
         /** Базовые значения ширины и высоты View */
         const val DEFAULT_VIEW_SIZE_HEIGHT = 150
@@ -65,7 +66,7 @@ class PieChart @JvmOverloads constructor(
     private val circleRect = RectF()
     private var circleStrokeWidth: Float = context.dpToPx(6)
     private var circleRadius: Float = 0F
-    private var circlePadding: Float = context.dpToPx(8)
+    private var circlePadding: Float = context.dpToPx(0)
     private var circlePaintRoundSize: Boolean = true
     private var circleSectionSpace: Float = 3F
     private var circleCenterX: Float = 0F

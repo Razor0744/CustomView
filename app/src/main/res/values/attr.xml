@@ -3,8 +3,6 @@
     <declare-styleable name="PieChart">
         <attr name="pieChartColors" format="reference" />
 
-        <attr name="pieChartMarginSmallCircle" format="dimension" />
-
         <attr name="pieChartCircleStrokeWidth" format="dimension" />
         <attr name="pieChartCirclePadding" format="dimension" />
         <attr name="pieChartCirclePaintRoundSize" format="boolean" />
