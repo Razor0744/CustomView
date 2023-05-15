@@ -28,7 +28,6 @@ import com.example.customview.domain.repository.PieChartRepository
  * AnalyticalPieChart обладает огромным количество настроек отображения.
  * Все расчеты производятся в пикселях, необходимо это учитывать при изменении кода.
  *
- * @property marginSmallCircle значение отступа между числом и маленьким кругом.
  * @property circleRect        объект отрисовки круговой диаграммы.
  * @property circleStrokeWidth значение толщины круговой диаграммы.
  * @property circleRadius      значение радиуса круговой диаграммы.
@@ -54,7 +53,6 @@ class PieChart @JvmOverloads constructor(
      * Базовые значения для полей и самой PieChart
      */
     companion object {
-        private const val DEFAULT_MARGIN_SMALL_CIRCLE = 12
 
         /** Процент ширины для отображения круговой диаграммы от общей ширины View */
         private const val CIRCLE_WIDTH_PERCENT = 1
@@ -64,7 +62,6 @@ class PieChart @JvmOverloads constructor(
         const val DEFAULT_VIEW_SIZE_WIDTH = 250
     }
 
-    private var marginSmallCircle: Float = context.dpToPx(DEFAULT_MARGIN_SMALL_CIRCLE)
     private val circleRect = RectF()
     private var circleStrokeWidth: Float = context.dpToPx(6)
     private var circleRadius: Float = 0F
@@ -93,12 +90,6 @@ class PieChart @JvmOverloads constructor(
             // Секция списка цветов
             val colorResId = typeArray.getResourceId(R.styleable.PieChart_pieChartColors, 0)
             pieChartColors = typeArray.resources.getStringArray(colorResId).toList()
-
-            // Секция отступов
-            marginSmallCircle = typeArray.getDimension(
-                R.styleable.PieChart_pieChartMarginSmallCircle,
-                marginSmallCircle
-            )
 
             // Секция круговой диаграммы
             circleStrokeWidth = typeArray.getDimension(
