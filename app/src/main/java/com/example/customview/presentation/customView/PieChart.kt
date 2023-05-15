@@ -64,7 +64,7 @@ class PieChart @JvmOverloads constructor(
     }
 
     private val circleRect = RectF()
-    private var circleStrokeWidth: Float = context.dpToPx(6)
+    private var circleStrokeWidth: Float = context.dpToPx(0)
     private var circleRadius: Float = 0F
     private var circlePadding: Float = context.dpToPx(0)
     private var circlePaintRoundSize: Boolean = true
